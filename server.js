@@ -40,8 +40,13 @@ app.get('/api/epc', async (req, res) => {
 });
 
 app.post('/api/valuation', async (req, res) => {
-  const { postcode, messages } = req.body;
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) {
+    console.error('[/api/valuation] ANTHROPIC_API_KEY is not set');
+    return res.status(500).json({ error: 'API key not configured' });
+  }
 
+  const { postcode, messages } = req.body;
   if (!postcode || !messages) {
     return res.status(400).json({ error: 'postcode and messages are required' });
   }
@@ -51,17 +56,18 @@ app.post('/api/valuation', async (req, res) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 1024,
         messages,
       }),
     });
 
     const data = await response.json();
+    console.log('[Anthropic response]', response.status, JSON.stringify(data, null, 2));
 
     if (!response.ok) {
       console.error('[Anthropic API error]', response.status, JSON.stringify(data, null, 2));
