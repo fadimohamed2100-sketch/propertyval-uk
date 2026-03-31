@@ -595,7 +595,14 @@
   }
 
   // ── Land Registry sold prices ───────────────────────────────
+  // Normalise to "AA9 9AA" format (strip extra spaces, insert space before last 3 chars)
+  function normalisePostcode(pc) {
+    const s = pc.replace(/\s+/g, '').toUpperCase();
+    return s.slice(0, -3) + ' ' + s.slice(-3);
+  }
+
   async function fetchSoldPrices(postcode) {
+    const normPostcode = normalisePostcode(postcode);
     const sparql = `
       PREFIX lrppi: <http://landregistry.data.gov.uk/def/ppi/>
       PREFIX lrcommon: <http://landregistry.data.gov.uk/def/common/>
@@ -605,7 +612,7 @@
         ?transx lrppi:pricePaid ?amount ;
                 lrppi:transactionDate ?date ;
                 lrppi:propertyAddress ?addr .
-        ?addr lrcommon:postcode "${postcode}"^^xsd:string .
+        ?addr lrcommon:postcode "${normPostcode}"^^xsd:string .
         OPTIONAL { ?addr lrcommon:paon ?paon }
         OPTIONAL { ?addr lrcommon:saon ?saon }
         OPTIONAL { ?addr lrcommon:street ?street }

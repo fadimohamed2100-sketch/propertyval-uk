@@ -19,7 +19,8 @@ app.get('/api/epc', async (req, res) => {
   const key = process.env.EPC_API_KEY;
 
   if (!email || !key || email === 'your-epc-email' || key === 'your-epc-key') {
-    return res.status(503).json({ error: 'EPC API credentials not configured' });
+    console.log('[/api/epc] EPC credentials not configured — returning empty data');
+    return res.json({ rows: [], totalResults: 0 });
   }
 
   try {
