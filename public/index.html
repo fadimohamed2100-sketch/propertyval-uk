@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PropertyVal UK – Instant Property Valuation</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1a3c5e;
+      --navy-light: #24527f;
+      --gold: #e8a020;
+      --gold-light: #f5c55a;
+      --bg: #f0f4f8;
+      --card: #ffffff;
+      --text: #1e2a38;
+      --muted: #6b7a8d;
+      --border: #dde3ec;
+      --green: #16a34a;
+      --red: #dc2626;
+      --radius: 12px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--navy);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: var(--gold);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+    }
+    header h1 { color: #fff; font-size: 1.3rem; font-weight: 700; letter-spacing: -0.3px; }
+    header span { color: var(--gold-light); font-size: 0.8rem; margin-left: 4px; font-weight: 400; }
+
+    /* ── Hero search ── */
+    .hero {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+      padding: 52px 24px 64px;
+      text-align: center;
+      color: #fff;
+    }
+    .hero h2 { font-size: 2rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.5px; }
+    .hero p { color: rgba(255,255,255,0.72); font-size: 1rem; margin-bottom: 32px; }
+
+    .search-box {
+      display: flex;
+      max-width: 520px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 50px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+    }
+    .search-box input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 16px 22px;
+      font-size: 1.05rem;
+      color: var(--text);
+      background: transparent;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .search-box input::placeholder { letter-spacing: 0; text-transform: none; color: #aab; }
+    .search-box button {
+      background: var(--gold);
+      border: none;
+      padding: 16px 28px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .search-box button:hover { background: #cf8e18; }
+    .search-box button:disabled { background: #ccc; cursor: not-allowed; }
+
+    /* ── Main container ── */
+    main { max-width: 960px; margin: -24px auto 60px; padding: 0 20px; }
+
+    /* ── Loading ── */
+    #loading {
+      display: none;
+      text-align: center;
+      padding: 48px 24px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .spinner {
+      width: 44px; height: 44px;
+      border: 4px solid var(--border);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-steps { color: var(--muted); font-size: 0.9rem; }
+    .loading-steps span { display: block; margin: 4px 0; }
+
+    /* ── Error ── */
+    #error-box {
+      display: none;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      color: var(--red);
+      margin-top: 24px;
+    }
+
+    /* ── Report ── */
+    #report { display: none; }
+
+    .report-header {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .report-title h3 { font-size: 1.4rem; font-weight: 800; color: var(--navy); }
+    .report-title p { color: var(--muted); font-size: 0.88rem; margin-top: 4px; }
+    .report-badge {
+      background: #ecfdf5;
+      color: var(--green);
+      border: 1px solid #bbf7d0;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* ── Metric cards ── */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      border-top: 4px solid var(--border);
+    }
+    .card.primary { border-top-color: var(--gold); }
+    .card.secondary { border-top-color: var(--navy); }
+    .card.accent { border-top-color: var(--green); }
+    .card label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); font-weight: 600; }
+    .card .value { font-size: 2rem; font-weight: 800; color: var(--text); margin: 8px 0 4px; line-height: 1; }
+    .card .sub { font-size: 0.82rem; color: var(--muted); }
+
+    /* ── EPC badge ── */
+    .epc-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px; height: 48px;
+      border-radius: 8px;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #fff;
+      margin: 8px 0 4px;
+    }
+    .epc-A { background: #008054; }
+    .epc-B { background: #19b459; }
+    .epc-C { background: #8dce46; color: #333; }
+    .epc-D { background: #ffd500; color: #333; }
+    .epc-E { background: #fcaa65; color: #333; }
+    .epc-F { background: #ef8023; }
+    .epc-G { background: #e9153b; }
+    .epc-unknown { background: #ccc; color: #555; }
+
+    /* ── Analysis ── */
+    .section {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+    .section h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .analysis-text { line-height: 1.7; color: #374151; font-size: 0.95rem; }
+    .analysis-text p { margin-bottom: 12px; }
+
+    .key-factors { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    .key-factors li {
+      display: flex; align-items: center; gap: 10px;
+      background: #f8fafc; border-radius: 8px; padding: 10px 14px;
+      font-size: 0.88rem; color: var(--text);
+    }
+    .key-factors li::before {
+      content: '✓';
+      color: var(--green);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ── Comparables table ── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    thead tr { background: #f8fafc; }
+    th { text-align: left; padding: 10px 14px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); font-weight: 600; border-bottom: 2px solid var(--border); }
+    td { padding: 11px 14px; border-bottom: 1px solid var(--border); color: var(--text); }
+    tbody tr:hover { background: #f9fafb; }
+    tbody tr:last-child td { border-bottom: none; }
+    td.price { font-weight: 700; color: var(--navy); }
+    .no-data { color: var(--muted); font-style: italic; text-align: center; padding: 24px; }
+
+    /* ── PDF button ── */
+    .actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 22px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--navy); color: #fff; }
+    .btn-primary:hover { background: var(--navy-light); }
+    .btn-outline { background: #fff; color: var(--navy); border: 2px solid var(--navy); }
+    .btn-outline:hover { background: #f0f4f8; }
+
+    /* ── Disclaimer ── */
+    .disclaimer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.78rem;
+      margin-top: 32px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      .hero h2 { font-size: 1.5rem; }
+      .report-header { flex-direction: column; }
+      .section { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo-icon">🏠</div>
+  <h1>PropertyVal UK <span>Beta</span></h1>
+</header>
+
+<div class="hero">
+  <h2>Instant UK Property Valuation</h2>
+  <p>AI-powered estimates using Land Registry, EPC & market data</p>
+  <div class="search-box">
+    <input id="postcode-input" type="text" placeholder="Enter postcode e.g. SW1A 1AA" maxlength="8" />
+    <button id="search-btn" onclick="startValuation()">Get Valuation</button>
+  </div>
+</div>
+
+<main>
+  <div id="loading">
+    <div class="spinner"></div>
+    <p style="font-weight:600;margin-bottom:8px;">Generating your valuation report…</p>
+    <div class="loading-steps">
+      <span id="step-1">⏳ Verifying postcode…</span>
+      <span id="step-2" style="opacity:0.4">⏳ Fetching sold prices from Land Registry…</span>
+      <span id="step-3" style="opacity:0.4">⏳ Retrieving EPC energy ratings…</span>
+      <span id="step-4" style="opacity:0.4">⏳ Analysing with AI…</span>
+    </div>
+  </div>
+
+  <div id="error-box"></div>
+
+  <div id="report">
+    <div class="report-header">
+      <div class="report-title">
+        <h3 id="report-postcode"></h3>
+        <p id="report-area"></p>
+      </div>
+      <div class="report-badge">✓ Valuation Complete</div>
+    </div>
+
+    <div class="cards">
+      <div class="card primary">
+        <label>Estimated Value</label>
+        <div class="value" id="est-value">—</div>
+        <div class="sub" id="est-range">—</div>
+      </div>
+      <div class="card secondary">
+        <label>Rental Yield</label>
+        <div class="value" id="rental-yield">—</div>
+        <div class="sub" id="monthly-rent">—</div>
+      </div>
+      <div class="card accent">
+        <label>EPC Rating</label>
+        <div id="epc-display"><div class="epc-badge epc-unknown">–</div></div>
+        <div class="sub" id="epc-sub">No EPC data</div>
+      </div>
+      <div class="card">
+        <label>Recent Sales</label>
+        <div class="value" id="sales-count">—</div>
+        <div class="sub">in this postcode</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h4>AI Market Analysis</h4>
+      <div class="analysis-text" id="analysis-text"></div>
+      <ul class="key-factors" id="key-factors"></ul>
+    </div>
+
+    <div class="section">
+      <h4>Comparable Sales – Land Registry</h4>
+      <div class="table-wrap">
+        <table id="sales-table">
+          <thead>
+            <tr>
+              <th>Address</th>
+              <th>Sale Price</th>
+              <th>Date</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody id="sales-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-outline" onclick="startValuation()">🔄 Refresh</button>
+      <button class="btn btn-primary" onclick="downloadPDF()">⬇ Download PDF Report</button>
+    </div>
+
+    <p class="disclaimer">
+      This valuation is an AI-generated estimate for informational purposes only and does not constitute professional advice.<br>
+      Data sourced from Land Registry, EPC Open Data Communities, and Postcodes.io.
+    </p>
+  </div>
+</main>
+
+<script>
+  // ── State ──────────────────────────────────────────────────
+  let reportData = {};
+
+  // ── Helpers ───────────────────────────────────────────────
+  const fmt = n => '£' + Math.round(n).toLocaleString('en-GB');
+  const setStep = (n, done) => {
+    const el = document.getElementById('step-' + n);
+    el.style.opacity = '1';
+    el.textContent = (done ? '✅' : '⏳') + ' ' + el.textContent.slice(2);
+  };
+  const markStep = (n, label) => {
+    const el = document.getElementById('step-' + n);
+    el.style.opacity = '1';
+    el.textContent = '✅ ' + label;
+  };
+
+  function showError(msg) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('report').style.display = 'none';
+    const box = document.getElementById('error-box');
+    box.style.display = 'block';
+    box.textContent = '⚠️ ' + msg;
+    document.getElementById('search-btn').disabled = false;
+  }
+
+  // ── Postcode fetch ────────────────────────────────────────
+  async function fetchPostcode(postcode) {
+    const res = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(postcode)}`);
+    if (!res.ok) throw new Error('Invalid or unknown postcode.');
+    const data = await res.json();
+    return data.result;
+  }
+
+  // ── Land Registry sold prices ─────────────────────────────
+  async function fetchSoldPrices(postcode) {
+    const sparql = `
+      PREFIX lrppi: <http://landregistry.data.gov.uk/def/ppi/>
+      PREFIX lrcommon: <http://landregistry.data.gov.uk/def/common/>
+      PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+      SELECT ?paon ?saon ?street ?town ?amount ?date ?propertyType
+      WHERE {
+        ?transx lrppi:pricePaid ?amount ;
+                lrppi:transactionDate ?date ;
+                lrppi:propertyAddress ?addr .
+        ?addr lrcommon:postcode "${postcode}"^^xsd:string .
+        OPTIONAL { ?addr lrcommon:paon ?paon }
+        OPTIONAL { ?addr lrcommon:saon ?saon }
+        OPTIONAL { ?addr lrcommon:street ?street }
+        OPTIONAL { ?addr lrcommon:town ?town }
+        OPTIONAL { ?transx lrppi:propertyType/rdfs:label ?propertyType }
+      }
+      ORDER BY DESC(?date)
+      LIMIT 20
+    `;
+    const url = `https://landregistry.data.gov.uk/landregistry/query?query=${encodeURIComponent(sparql)}&output=json`;
+    const res = await fetch(url);
+    if (!res.ok) return [];
+    const json = await res.json();
+    return (json.results?.bindings || []).map(b => ({
+      address: [b.saon?.value, b.paon?.value, b.street?.value].filter(Boolean).join(', '),
+      town: b.town?.value || '',
+      amount: parseInt(b.amount?.value || '0', 10),
+      date: b.date?.value?.slice(0, 10) || '',
+      type: b.propertyType?.value || 'Unknown',
+    }));
+  }
+
+  // ── EPC data ──────────────────────────────────────────────
+  async function fetchEPC(postcode) {
+    try {
+      const res = await fetch(`/api/epc?postcode=${encodeURIComponent(postcode)}`);
+      if (!res.ok) return null;
+      const data = await res.json();
+      const rows = data.rows || [];
+      if (!rows.length) return null;
+      const latest = rows[0];
+      return {
+        rating: latest['current-energy-rating'] || null,
+        score: latest['current-energy-efficiency'] || null,
+        type: latest['property-type'] || null,
+        built: latest['construction-age-band'] || null,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  // ── Format type label ─────────────────────────────────────
+  function formatType(uri) {
+    if (!uri) return 'Unknown';
+    const map = {
+      'detached': 'Detached', 'semi-detached': 'Semi-Detached',
+      'terraced': 'Terraced', 'flat-maisonette': 'Flat/Maisonette',
+      'other': 'Other',
+    };
+    for (const [k, v] of Object.entries(map)) {
+      if (uri.toLowerCase().includes(k)) return v;
+    }
+    return uri.split('/').pop();
+  }
+
+  // ── Main valuation flow ───────────────────────────────────
+  async function startValuation() {
+    const raw = document.getElementById('postcode-input').value.trim().toUpperCase();
+    if (!raw) return;
+
+    // Reset UI
+    document.getElementById('error-box').style.display = 'none';
+    document.getElementById('report').style.display = 'none';
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('search-btn').disabled = true;
+    ['1','2','3','4'].forEach(n => {
+      const el = document.getElementById('step-' + n);
+      el.style.opacity = n === '1' ? '1' : '0.4';
+      el.textContent = '⏳ ' + ['Verifying postcode…','Fetching sold prices from Land Registry…','Retrieving EPC energy ratings…','Analysing with AI…'][n-1];
+    });
+
+    try {
+      // Step 1: Postcode
+      const pc = await fetchPostcode(raw);
+      markStep(1, `Postcode verified: ${pc.postcode}`);
+
+      // Steps 2 & 3: parallel
+      document.getElementById('step-2').style.opacity = '1';
+      document.getElementById('step-3').style.opacity = '1';
+      const [sales, epc] = await Promise.all([
+        fetchSoldPrices(pc.postcode),
+        fetchEPC(pc.postcode),
+      ]);
+      markStep(2, `${sales.length} sold prices retrieved`);
+      markStep(3, epc ? `EPC rating: ${epc.rating}` : 'EPC data unavailable');
+
+      // Step 4: Claude
+      document.getElementById('step-4').style.opacity = '1';
+      const salesSummary = sales.length
+        ? sales.slice(0, 10).map(s => `${s.address}, ${s.town}: ${fmt(s.amount)} on ${s.date} (${formatType(s.type)})`).join('\n')
+        : 'No recent sold price data found.';
+
+      const epcSummary = epc
+        ? `EPC Rating: ${epc.rating}, Efficiency score: ${epc.score}, Property type: ${epc.type}, Built: ${epc.built}`
+        : 'EPC data not available.';
+
+      const prompt = `You are a senior UK property valuation expert. Provide a detailed valuation report based on the following data.
+
+Postcode: ${pc.postcode}
+Area: ${pc.admin_ward}, ${pc.admin_district}, ${pc.region}
+Latitude/Longitude: ${pc.latitude}, ${pc.longitude}
+Country: ${pc.country}
+
+Recent Sold Prices (Land Registry – up to last 10):
+${salesSummary}
+
+EPC Data:
+${epcSummary}
+
+Based on this data, provide a UK property market valuation. Return ONLY valid JSON with no markdown, no code fences, exactly this structure:
+{
+  "estimatedValue": <number>,
+  "valueLow": <number>,
+  "valueHigh": <number>,
+  "rentalYield": <number>,
+  "monthlyRent": <number>,
+  "analysis": "<2-3 paragraphs of market analysis>",
+  "keyFactors": ["<factor1>", "<factor2>", "<factor3>", "<factor4>"]
+}`;
+
+      const valRes = await fetch('/api/valuation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          postcode: pc.postcode,
+          messages: [{ role: 'user', content: prompt }],
+        }),
+      });
+
+      const valData = await valRes.json();
+      if (!valRes.ok) throw new Error(valData.error || 'Valuation API error');
+
+      const rawText = valData.content?.[0]?.text || '';
+      let ai;
+      try {
+        ai = JSON.parse(rawText.replace(/```json|```/g, '').trim());
+      } catch {
+        throw new Error('Could not parse AI response. Please try again.');
+      }
+      markStep(4, 'AI analysis complete');
+
+      // Store for PDF
+      reportData = { pc, sales, epc, ai };
+
+      // ── Render report ──────────────────────────────────────
+      document.getElementById('report-postcode').textContent = pc.postcode;
+      document.getElementById('report-area').textContent =
+        [pc.admin_ward, pc.admin_district, pc.region].filter(Boolean).join(' · ');
+
+      document.getElementById('est-value').textContent = fmt(ai.estimatedValue);
+      document.getElementById('est-range').textContent = `Range: ${fmt(ai.valueLow)} – ${fmt(ai.valueHigh)}`;
+
+      document.getElementById('rental-yield').textContent = ai.rentalYield.toFixed(1) + '%';
+      document.getElementById('monthly-rent').textContent = `Est. ${fmt(ai.monthlyRent)} / month`;
+
+      // EPC
+      const epcWrap = document.getElementById('epc-display');
+      const epcSub = document.getElementById('epc-sub');
+      if (epc?.rating) {
+        epcWrap.innerHTML = `<div class="epc-badge epc-${epc.rating}">${epc.rating}</div>`;
+        epcSub.textContent = `Score: ${epc.score || '–'} · ${epc.type || ''}`;
+      } else {
+        epcWrap.innerHTML = `<div class="epc-badge epc-unknown">–</div>`;
+        epcSub.textContent = 'Configure EPC credentials';
+      }
+
+      document.getElementById('sales-count').textContent = sales.length;
+
+      // Analysis
+      const analysisEl = document.getElementById('analysis-text');
+      analysisEl.innerHTML = (ai.analysis || '').split('\n').filter(Boolean)
+        .map(p => `<p>${p}</p>`).join('');
+
+      // Key factors
+      const factorsList = document.getElementById('key-factors');
+      factorsList.innerHTML = (ai.keyFactors || []).map(f => `<li>${f}</li>`).join('');
+
+      // Sales table
+      const tbody = document.getElementById('sales-body');
+      if (sales.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="no-data">No sold price data found for this postcode.</td></tr>`;
+      } else {
+        tbody.innerHTML = sales.map(s => `
+          <tr>
+            <td>${s.address || '—'}${s.town ? ', ' + s.town : ''}</td>
+            <td class="price">${fmt(s.amount)}</td>
+            <td>${s.date}</td>
+            <td>${formatType(s.type)}</td>
+          </tr>`).join('');
+      }
+
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('report').style.display = 'block';
+
+    } catch (err) {
+      showError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      document.getElementById('search-btn').disabled = false;
+    }
+  }
+
+  // ── Enter key support ─────────────────────────────────────
+  document.getElementById('postcode-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') startValuation();
+  });
+
+  // ── PDF Generation ─────────────────────────────────────────
+  function downloadPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    const { pc, sales, epc, ai } = reportData;
+    const margin = 18;
+    let y = margin;
+
+    // Header bar
+    doc.setFillColor(26, 60, 94);
+    doc.rect(0, 0, 210, 28, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.text('PropertyVal UK – Valuation Report', margin, 18);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Generated: ${new Date().toLocaleDateString('en-GB')}`, 210 - margin, 18, { align: 'right' });
+    y = 38;
+
+    // Postcode & area
+    doc.setTextColor(30, 42, 56);
+    doc.setFontSize(20);
+    doc.setFont('helvetica', 'bold');
+    doc.text(pc.postcode, margin, y); y += 7;
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(107, 122, 141);
+    doc.text([pc.admin_ward, pc.admin_district, pc.region].filter(Boolean).join(' · '), margin, y); y += 12;
+
+    // Key metrics table
+    doc.setFillColor(240, 244, 248);
+    doc.roundedRect(margin, y, 174, 24, 3, 3, 'F');
+    doc.setTextColor(30, 42, 56);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text('ESTIMATED VALUE', margin + 4, y + 7);
+    doc.text('RENTAL YIELD', margin + 62, y + 7);
+    doc.text('MONTHLY RENT', margin + 110, y + 7);
+    doc.setFontSize(14);
+    doc.text(fmt(ai.estimatedValue), margin + 4, y + 18);
+    doc.setFontSize(14);
+    doc.text(ai.rentalYield.toFixed(1) + '%', margin + 62, y + 18);
+    doc.text(fmt(ai.monthlyRent), margin + 110, y + 18);
+    y += 32;
+
+    // Range
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(107, 122, 141);
+    doc.text(`Value range: ${fmt(ai.valueLow)} – ${fmt(ai.valueHigh)}`, margin, y);
+    if (epc?.rating) doc.text(`EPC Rating: ${epc.rating}  Score: ${epc.score}`, margin + 90, y);
+    y += 12;
+
+    // Analysis
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(26, 60, 94);
+    doc.text('Market Analysis', margin, y); y += 6;
+    doc.setDrawColor(232, 160, 32);
+    doc.setLineWidth(0.5);
+    doc.line(margin, y, 210 - margin, y); y += 5;
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(55, 65, 81);
+    const analysisLines = doc.splitTextToSize(ai.analysis || '', 174);
+    doc.text(analysisLines, margin, y);
+    y += analysisLines.length * 4.5 + 8;
+
+    // Key factors
+    if (ai.keyFactors?.length) {
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(26, 60, 94);
+      doc.text('Key Market Factors', margin, y); y += 5;
+      doc.setDrawColor(232, 160, 32);
+      doc.line(margin, y, 210 - margin, y); y += 5;
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(55, 65, 81);
+      ai.keyFactors.forEach(f => {
+        doc.text('✓  ' + f, margin, y); y += 5.5;
+      });
+      y += 6;
+    }
+
+    // Sales table
+    if (sales.length > 0) {
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(26, 60, 94);
+      doc.text('Comparable Sales – Land Registry', margin, y); y += 5;
+      doc.setDrawColor(232, 160, 32);
+      doc.line(margin, y, 210 - margin, y); y += 3;
+
+      doc.autoTable({
+        startY: y,
+        margin: { left: margin, right: margin },
+        head: [['Address', 'Price', 'Date', 'Type']],
+        body: sales.slice(0, 15).map(s => [
+          (s.address || '—') + (s.town ? ', ' + s.town : ''),
+          fmt(s.amount),
+          s.date,
+          formatType(s.type),
+        ]),
+        styles: { fontSize: 8, cellPadding: 3 },
+        headStyles: { fillColor: [26, 60, 94], textColor: 255, fontStyle: 'bold' },
+        alternateRowStyles: { fillColor: [248, 250, 252] },
+      });
+    }
+
+    // Footer
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(7.5);
+      doc.setTextColor(160, 170, 184);
+      doc.text('This report is for informational purposes only and does not constitute professional property advice.', 105, 290, { align: 'center' });
+    }
+
+    doc.save(`PropertyVal-${pc.postcode.replace(/\s/g, '')}-${Date.now()}.pdf`);
+  }
+</script>
+</body>
+</html>
