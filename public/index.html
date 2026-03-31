@@ -64,7 +64,7 @@
 
     .search-box {
       display: flex;
-      max-width: 520px;
+      max-width: 580px;
       margin: 0 auto;
       background: #fff;
       border-radius: 50px;
@@ -76,13 +76,11 @@
       border: none;
       outline: none;
       padding: 16px 22px;
-      font-size: 1.05rem;
+      font-size: 1rem;
       color: var(--text);
       background: transparent;
-      letter-spacing: 1px;
-      text-transform: uppercase;
     }
-    .search-box input::placeholder { letter-spacing: 0; text-transform: none; color: #aab; }
+    .search-box input::placeholder { color: #aab; }
     .search-box button {
       background: var(--gold);
       border: none;
@@ -98,7 +96,7 @@
     .search-box button:disabled { background: #ccc; cursor: not-allowed; }
 
     /* ── Main container ── */
-    main { max-width: 960px; margin: -24px auto 60px; padding: 0 20px; }
+    main { max-width: 980px; margin: -24px auto 60px; padding: 0 20px; }
 
     /* ── Loading ── */
     #loading {
@@ -135,6 +133,7 @@
     /* ── Report ── */
     #report { display: none; }
 
+    /* Report header */
     .report-header {
       background: var(--card);
       border-radius: var(--radius);
@@ -146,9 +145,26 @@
       align-items: flex-start;
       flex-wrap: wrap;
       gap: 16px;
+      border-left: 5px solid var(--gold);
     }
-    .report-title h3 { font-size: 1.4rem; font-weight: 800; color: var(--navy); }
-    .report-title p { color: var(--muted); font-size: 0.88rem; margin-top: 4px; }
+    .report-title .address-full {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--navy);
+      line-height: 1.2;
+    }
+    .report-title .address-postcode {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--navy-light);
+      margin-top: 2px;
+    }
+    .report-title .address-area {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-top: 4px;
+    }
+    .report-meta { text-align: right; }
     .report-badge {
       background: #ecfdf5;
       color: var(--green);
@@ -157,23 +173,27 @@
       padding: 6px 14px;
       font-size: 0.8rem;
       font-weight: 600;
+      display: inline-block;
+      margin-bottom: 6px;
     }
+    .report-date { font-size: 0.78rem; color: var(--muted); }
 
     /* ── Metric cards ── */
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 20px; }
     .card {
       background: var(--card);
       border-radius: var(--radius);
-      padding: 24px;
+      padding: 22px 20px;
       box-shadow: var(--shadow);
       border-top: 4px solid var(--border);
     }
     .card.primary { border-top-color: var(--gold); }
     .card.secondary { border-top-color: var(--navy); }
     .card.accent { border-top-color: var(--green); }
-    .card label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); font-weight: 600; }
-    .card .value { font-size: 2rem; font-weight: 800; color: var(--text); margin: 8px 0 4px; line-height: 1; }
-    .card .sub { font-size: 0.82rem; color: var(--muted); }
+    .card.info { border-top-color: #6366f1; }
+    .card label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); font-weight: 600; }
+    .card .value { font-size: 1.8rem; font-weight: 800; color: var(--text); margin: 8px 0 4px; line-height: 1; }
+    .card .sub { font-size: 0.8rem; color: var(--muted); }
 
     /* ── EPC badge ── */
     .epc-badge {
@@ -196,6 +216,99 @@
     .epc-G { background: #e9153b; }
     .epc-unknown { background: #ccc; color: #555; }
 
+    /* ── Property details section ── */
+    .property-details {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 24px 32px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+    .property-details h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .details-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+    }
+    .detail-item label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--muted);
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .detail-item .detail-val {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .detail-item .detail-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── Value range bar ── */
+    .value-range-section {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 24px 32px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+    .value-range-section h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .range-bar-wrap { position: relative; margin: 8px 0 20px; }
+    .range-bar-track {
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      position: relative;
+    }
+    .range-bar-fill {
+      position: absolute;
+      height: 8px;
+      background: linear-gradient(90deg, #f5c55a, var(--gold));
+      border-radius: 4px;
+    }
+    .range-bar-pointer {
+      position: absolute;
+      top: -4px;
+      width: 16px; height: 16px;
+      background: var(--navy);
+      border-radius: 50%;
+      border: 3px solid #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+      transform: translateX(-50%);
+    }
+    .range-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+    .range-labels .center-label {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 1.1rem;
+    }
+
     /* ── Analysis ── */
     .section {
       background: var(--card);
@@ -212,14 +325,15 @@
       padding-bottom: 12px;
       border-bottom: 1px solid var(--border);
     }
-    .analysis-text { line-height: 1.7; color: #374151; font-size: 0.95rem; }
+    .analysis-text { line-height: 1.75; color: #374151; font-size: 0.95rem; }
     .analysis-text p { margin-bottom: 12px; }
 
     .key-factors { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
     .key-factors li {
-      display: flex; align-items: center; gap: 10px;
+      display: flex; align-items: flex-start; gap: 10px;
       background: #f8fafc; border-radius: 8px; padding: 10px 14px;
       font-size: 0.88rem; color: var(--text);
+      border-left: 3px solid var(--green);
     }
     .key-factors li::before {
       content: '✓';
@@ -232,7 +346,7 @@
     .table-wrap { overflow-x: auto; }
     table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
     thead tr { background: #f8fafc; }
-    th { text-align: left; padding: 10px 14px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); font-weight: 600; border-bottom: 2px solid var(--border); }
+    th { text-align: left; padding: 10px 14px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); font-weight: 600; border-bottom: 2px solid var(--border); }
     td { padding: 11px 14px; border-bottom: 1px solid var(--border); color: var(--text); }
     tbody tr:hover { background: #f9fafb; }
     tbody tr:last-child td { border-bottom: none; }
@@ -253,6 +367,8 @@
     }
     .btn-primary { background: var(--navy); color: #fff; }
     .btn-primary:hover { background: var(--navy-light); }
+    .btn-pdf { background: #dc2626; color: #fff; }
+    .btn-pdf:hover { background: #b91c1c; }
     .btn-outline { background: #fff; color: var(--navy); border: 2px solid var(--navy); }
     .btn-outline:hover { background: #f0f4f8; }
 
@@ -268,7 +384,8 @@
     @media (max-width: 600px) {
       .hero h2 { font-size: 1.5rem; }
       .report-header { flex-direction: column; }
-      .section { padding: 20px; }
+      .report-meta { text-align: left; }
+      .section, .property-details, .value-range-section { padding: 20px; }
     }
   </style>
 </head>
@@ -281,9 +398,9 @@
 
 <div class="hero">
   <h2>Instant UK Property Valuation</h2>
-  <p>AI-powered estimates using Land Registry, EPC & market data</p>
+  <p>AI-powered estimates using Land Registry, EPC &amp; market data</p>
   <div class="search-box">
-    <input id="postcode-input" type="text" placeholder="Enter postcode e.g. SW1A 1AA" maxlength="8" />
+    <input id="address-input" type="text" placeholder="Enter address e.g. 55 Bolckow Road, TS6 7ED" />
     <button id="search-btn" onclick="startValuation()">Get Valuation</button>
   </div>
 </div>
@@ -293,7 +410,7 @@
     <div class="spinner"></div>
     <p style="font-weight:600;margin-bottom:8px;">Generating your valuation report…</p>
     <div class="loading-steps">
-      <span id="step-1">⏳ Verifying postcode…</span>
+      <span id="step-1">⏳ Extracting postcode from address…</span>
       <span id="step-2" style="opacity:0.4">⏳ Fetching sold prices from Land Registry…</span>
       <span id="step-3" style="opacity:0.4">⏳ Retrieving EPC energy ratings…</span>
       <span id="step-4" style="opacity:0.4">⏳ Analysing with AI…</span>
@@ -303,14 +420,20 @@
   <div id="error-box"></div>
 
   <div id="report">
+    <!-- Report header -->
     <div class="report-header">
       <div class="report-title">
-        <h3 id="report-postcode"></h3>
-        <p id="report-area"></p>
+        <div class="address-full" id="report-address">—</div>
+        <div class="address-postcode" id="report-postcode">—</div>
+        <div class="address-area" id="report-area">—</div>
       </div>
-      <div class="report-badge">✓ Valuation Complete</div>
+      <div class="report-meta">
+        <div class="report-badge">✓ Valuation Complete</div>
+        <div class="report-date" id="report-date">—</div>
+      </div>
     </div>
 
+    <!-- Key metric cards -->
     <div class="cards">
       <div class="card primary">
         <label>Estimated Value</label>
@@ -327,6 +450,11 @@
         <div id="epc-display"><div class="epc-badge epc-unknown">–</div></div>
         <div class="sub" id="epc-sub">No EPC data</div>
       </div>
+      <div class="card info">
+        <label>Bedrooms</label>
+        <div class="value" id="bedrooms-val">—</div>
+        <div class="sub" id="property-type-sub">—</div>
+      </div>
       <div class="card">
         <label>Recent Sales</label>
         <div class="value" id="sales-count">—</div>
@@ -334,12 +462,63 @@
       </div>
     </div>
 
+    <!-- Property details -->
+    <div class="property-details">
+      <h4>Property Details</h4>
+      <div class="details-grid">
+        <div class="detail-item">
+          <label>Property Type</label>
+          <div class="detail-val" id="det-type">—</div>
+        </div>
+        <div class="detail-item">
+          <label>Bedrooms</label>
+          <div class="detail-val" id="det-bedrooms">—</div>
+        </div>
+        <div class="detail-item">
+          <label>Floor Area</label>
+          <div class="detail-val" id="det-size">—</div>
+          <div class="detail-sub" id="det-size-sub"></div>
+        </div>
+        <div class="detail-item">
+          <label>Year Built</label>
+          <div class="detail-val" id="det-year">—</div>
+        </div>
+        <div class="detail-item">
+          <label>EPC Rating</label>
+          <div class="detail-val" id="det-epc">—</div>
+          <div class="detail-sub" id="det-epc-score"></div>
+        </div>
+        <div class="detail-item">
+          <label>Council Tax Band</label>
+          <div class="detail-val" id="det-council">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Value range visualiser -->
+    <div class="value-range-section">
+      <h4>Estimated Value Range</h4>
+      <div class="range-bar-wrap">
+        <div class="range-bar-track">
+          <div class="range-bar-fill" id="range-fill"></div>
+          <div class="range-bar-pointer" id="range-pointer"></div>
+        </div>
+      </div>
+      <div class="range-labels">
+        <span id="range-low">—</span>
+        <span class="center-label" id="range-mid">—</span>
+        <span id="range-high">—</span>
+      </div>
+    </div>
+
+    <!-- AI analysis -->
     <div class="section">
-      <h4>AI Market Analysis</h4>
+      <h4>AI Market Commentary</h4>
       <div class="analysis-text" id="analysis-text"></div>
       <ul class="key-factors" id="key-factors"></ul>
     </div>
 
+    <!-- Comparables table -->
     <div class="section">
       <h4>Comparable Sales – Land Registry</h4>
       <div class="table-wrap">
@@ -358,28 +537,24 @@
     </div>
 
     <div class="actions">
-      <button class="btn btn-outline" onclick="startValuation()">🔄 Refresh</button>
-      <button class="btn btn-primary" onclick="downloadPDF()">⬇ Download PDF Report</button>
+      <button class="btn btn-outline" onclick="startValuation()">🔄 New Valuation</button>
+      <button class="btn btn-pdf" onclick="downloadPDF()">⬇ Download PDF Report</button>
     </div>
 
     <p class="disclaimer">
       This valuation is an AI-generated estimate for informational purposes only and does not constitute professional advice.<br>
-      Data sourced from Land Registry, EPC Open Data Communities, and Postcodes.io.
+      Data sourced from Land Registry, EPC Open Data Communities, and Postcodes.io. &copy; PropertyVal UK.
     </p>
   </div>
 </main>
 
 <script>
-  // ── State ──────────────────────────────────────────────────
+  // ── State ───────────────────────────────────────────────────
   let reportData = {};
 
-  // ── Helpers ───────────────────────────────────────────────
+  // ── Helpers ────────────────────────────────────────────────
   const fmt = n => '£' + Math.round(n).toLocaleString('en-GB');
-  const setStep = (n, done) => {
-    const el = document.getElementById('step-' + n);
-    el.style.opacity = '1';
-    el.textContent = (done ? '✅' : '⏳') + ' ' + el.textContent.slice(2);
-  };
+
   const markStep = (n, label) => {
     const el = document.getElementById('step-' + n);
     el.style.opacity = '1';
@@ -395,15 +570,31 @@
     document.getElementById('search-btn').disabled = false;
   }
 
-  // ── Postcode fetch ────────────────────────────────────────
+  // ── Extract postcode from free-text address ─────────────────
+  function extractPostcode(input) {
+    const match = input.match(/([A-Z]{1,2}[0-9][0-9A-Z]?\s*[0-9][A-Z]{2})/i);
+    if (!match) return null;
+    return match[1].toUpperCase().replace(/\s+/, ' ').trim();
+  }
+
+  // ── Derive street address (everything before the postcode) ──
+  function extractStreet(input, postcode) {
+    const idx = input.toUpperCase().indexOf(postcode.replace(' ', ''));
+    const withSpace = input.toUpperCase().indexOf(postcode);
+    const cut = withSpace >= 0 ? withSpace : idx;
+    if (cut > 0) return input.slice(0, cut).replace(/,\s*$/, '').trim();
+    return input.trim();
+  }
+
+  // ── Postcode lookup ─────────────────────────────────────────
   async function fetchPostcode(postcode) {
     const res = await fetch(`https://api.postcodes.io/postcodes/${encodeURIComponent(postcode)}`);
-    if (!res.ok) throw new Error('Invalid or unknown postcode.');
+    if (!res.ok) throw new Error('Invalid or unknown postcode. Please check the address and try again.');
     const data = await res.json();
     return data.result;
   }
 
-  // ── Land Registry sold prices ─────────────────────────────
+  // ── Land Registry sold prices ───────────────────────────────
   async function fetchSoldPrices(postcode) {
     const sparql = `
       PREFIX lrppi: <http://landregistry.data.gov.uk/def/ppi/>
@@ -422,22 +613,26 @@
         OPTIONAL { ?transx lrppi:propertyType/rdfs:label ?propertyType }
       }
       ORDER BY DESC(?date)
-      LIMIT 20
+      LIMIT 25
     `;
     const url = `https://landregistry.data.gov.uk/landregistry/query?query=${encodeURIComponent(sparql)}&output=json`;
-    const res = await fetch(url);
-    if (!res.ok) return [];
-    const json = await res.json();
-    return (json.results?.bindings || []).map(b => ({
-      address: [b.saon?.value, b.paon?.value, b.street?.value].filter(Boolean).join(', '),
-      town: b.town?.value || '',
-      amount: parseInt(b.amount?.value || '0', 10),
-      date: b.date?.value?.slice(0, 10) || '',
-      type: b.propertyType?.value || 'Unknown',
-    }));
+    try {
+      const res = await fetch(url);
+      if (!res.ok) return [];
+      const json = await res.json();
+      return (json.results?.bindings || []).map(b => ({
+        address: [b.saon?.value, b.paon?.value, b.street?.value].filter(Boolean).join(', '),
+        town: b.town?.value || '',
+        amount: parseInt(b.amount?.value || '0', 10),
+        date: b.date?.value?.slice(0, 10) || '',
+        type: b.propertyType?.value || 'Unknown',
+      }));
+    } catch {
+      return [];
+    }
   }
 
-  // ── EPC data ──────────────────────────────────────────────
+  // ── EPC data ────────────────────────────────────────────────
   async function fetchEPC(postcode) {
     try {
       const res = await fetch(`/api/epc?postcode=${encodeURIComponent(postcode)}`);
@@ -451,19 +646,20 @@
         score: latest['current-energy-efficiency'] || null,
         type: latest['property-type'] || null,
         built: latest['construction-age-band'] || null,
+        floorArea: latest['total-floor-area'] || null,
+        rooms: latest['number-habitable-rooms'] || null,
       };
     } catch {
       return null;
     }
   }
 
-  // ── Format type label ─────────────────────────────────────
+  // ── Format type label ────────────────────────────────────────
   function formatType(uri) {
     if (!uri) return 'Unknown';
     const map = {
       'detached': 'Detached', 'semi-detached': 'Semi-Detached',
-      'terraced': 'Terraced', 'flat-maisonette': 'Flat/Maisonette',
-      'other': 'Other',
+      'terraced': 'Terraced', 'flat-maisonette': 'Flat/Maisonette', 'other': 'Other',
     };
     for (const [k, v] of Object.entries(map)) {
       if (uri.toLowerCase().includes(k)) return v;
@@ -471,9 +667,9 @@
     return uri.split('/').pop();
   }
 
-  // ── Main valuation flow ───────────────────────────────────
+  // ── Main valuation flow ──────────────────────────────────────
   async function startValuation() {
-    const raw = document.getElementById('postcode-input').value.trim().toUpperCase();
+    const raw = document.getElementById('address-input').value.trim();
     if (!raw) return;
 
     // Reset UI
@@ -481,15 +677,23 @@
     document.getElementById('report').style.display = 'none';
     document.getElementById('loading').style.display = 'block';
     document.getElementById('search-btn').disabled = true;
-    ['1','2','3','4'].forEach(n => {
+    ['1','2','3','4'].forEach((n, i) => {
       const el = document.getElementById('step-' + n);
       el.style.opacity = n === '1' ? '1' : '0.4';
-      el.textContent = '⏳ ' + ['Verifying postcode…','Fetching sold prices from Land Registry…','Retrieving EPC energy ratings…','Analysing with AI…'][n-1];
+      el.textContent = '⏳ ' + [
+        'Extracting postcode from address…',
+        'Fetching sold prices from Land Registry…',
+        'Retrieving EPC energy ratings…',
+        'Analysing with AI…',
+      ][i];
     });
 
     try {
-      // Step 1: Postcode
-      const pc = await fetchPostcode(raw);
+      // Step 1: Extract postcode & verify
+      const postcode = extractPostcode(raw);
+      if (!postcode) throw new Error('No valid UK postcode found. Please include a postcode e.g. "55 High Street, SW1A 1AA".');
+      const streetAddress = extractStreet(raw, postcode);
+      const pc = await fetchPostcode(postcode);
       markStep(1, `Postcode verified: ${pc.postcode}`);
 
       // Steps 2 & 3: parallel
@@ -502,38 +706,53 @@
       markStep(2, `${sales.length} sold prices retrieved`);
       markStep(3, epc ? `EPC rating: ${epc.rating}` : 'EPC data unavailable');
 
-      // Step 4: Claude
+      // Step 4: Claude AI
       document.getElementById('step-4').style.opacity = '1';
+
       const salesSummary = sales.length
-        ? sales.slice(0, 10).map(s => `${s.address}, ${s.town}: ${fmt(s.amount)} on ${s.date} (${formatType(s.type)})`).join('\n')
+        ? sales.slice(0, 12).map(s =>
+            `${s.address}${s.town ? ', ' + s.town : ''}: ${fmt(s.amount)} on ${s.date} (${formatType(s.type)})`
+          ).join('\n')
         : 'No recent sold price data found.';
 
       const epcSummary = epc
-        ? `EPC Rating: ${epc.rating}, Efficiency score: ${epc.score}, Property type: ${epc.type}, Built: ${epc.built}`
+        ? `EPC Rating: ${epc.rating}, Score: ${epc.score}, Type: ${epc.type}, Built: ${epc.built}, Floor area: ${epc.floorArea ? epc.floorArea + ' m²' : 'unknown'}, Habitable rooms: ${epc.rooms || 'unknown'}`
         : 'EPC data not available.';
 
-      const prompt = `You are a senior UK property valuation expert. Provide a detailed valuation report based on the following data.
+      const prompt = `You are a senior UK chartered surveyor and property valuation expert. Produce a detailed valuation report for the following property.
 
-Postcode: ${pc.postcode}
+Full Address: ${streetAddress ? streetAddress + ', ' : ''}${pc.postcode}
 Area: ${pc.admin_ward}, ${pc.admin_district}, ${pc.region}
-Latitude/Longitude: ${pc.latitude}, ${pc.longitude}
+Coordinates: ${pc.latitude}, ${pc.longitude}
 Country: ${pc.country}
 
-Recent Sold Prices (Land Registry – up to last 10):
+Recent Sold Prices – Land Registry (up to last 12 in this postcode):
 ${salesSummary}
 
-EPC Data:
+EPC Certificate Data:
 ${epcSummary}
 
-Based on this data, provide a UK property market valuation. Return ONLY valid JSON with no markdown, no code fences, exactly this structure:
+Instructions:
+- Use the sold prices to anchor the valuation estimate.
+- Infer bedrooms from EPC habitable rooms if available (bedrooms ≈ habitable rooms − 1, minimum 1).
+- Estimate floor area from EPC data if available.
+- Estimate year built from EPC construction age band.
+- Estimate council tax band from property value and region.
+- Write 3 paragraphs of market commentary covering: local market conditions, how this property compares to recent sales, and outlook/investment potential.
+- Return ONLY valid JSON with no markdown, no code fences, exactly this structure:
 {
-  "estimatedValue": <number>,
-  "valueLow": <number>,
-  "valueHigh": <number>,
-  "rentalYield": <number>,
-  "monthlyRent": <number>,
-  "analysis": "<2-3 paragraphs of market analysis>",
-  "keyFactors": ["<factor1>", "<factor2>", "<factor3>", "<factor4>"]
+  "estimatedValue": <integer>,
+  "valueLow": <integer>,
+  "valueHigh": <integer>,
+  "rentalYield": <number with 1 decimal>,
+  "monthlyRent": <integer>,
+  "bedrooms": <integer>,
+  "propertyType": "<Detached|Semi-Detached|Terraced|Flat/Maisonette|Other>",
+  "floorAreaSqM": <integer or null>,
+  "yearBuilt": "<decade or range e.g. '1930s' or '2000-2010'>",
+  "councilTaxBand": "<A-H or 'Unknown'>",
+  "analysis": "<3 paragraphs separated by newlines>",
+  "keyFactors": ["<factor1>", "<factor2>", "<factor3>", "<factor4>", "<factor5>"]
 }`;
 
       const valRes = await fetch('/api/valuation', {
@@ -558,44 +777,74 @@ Based on this data, provide a UK property market valuation. Return ONLY valid JS
       markStep(4, 'AI analysis complete');
 
       // Store for PDF
-      reportData = { pc, sales, epc, ai };
+      reportData = { pc, sales, epc, ai, streetAddress };
 
       // ── Render report ──────────────────────────────────────
-      document.getElementById('report-postcode').textContent = pc.postcode;
+
+      // Header
+      const fullAddr = streetAddress ? `${streetAddress}, ${pc.postcode}` : pc.postcode;
+      document.getElementById('report-address').textContent = streetAddress || pc.postcode;
+      document.getElementById('report-postcode').textContent = streetAddress ? pc.postcode : '';
       document.getElementById('report-area').textContent =
         [pc.admin_ward, pc.admin_district, pc.region].filter(Boolean).join(' · ');
+      document.getElementById('report-date').textContent =
+        'Generated ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 
+      // Key cards
       document.getElementById('est-value').textContent = fmt(ai.estimatedValue);
       document.getElementById('est-range').textContent = `Range: ${fmt(ai.valueLow)} – ${fmt(ai.valueHigh)}`;
-
-      document.getElementById('rental-yield').textContent = ai.rentalYield.toFixed(1) + '%';
+      document.getElementById('rental-yield').textContent = Number(ai.rentalYield).toFixed(1) + '%';
       document.getElementById('monthly-rent').textContent = `Est. ${fmt(ai.monthlyRent)} / month`;
-
-      // EPC
-      const epcWrap = document.getElementById('epc-display');
-      const epcSub = document.getElementById('epc-sub');
-      if (epc?.rating) {
-        epcWrap.innerHTML = `<div class="epc-badge epc-${epc.rating}">${epc.rating}</div>`;
-        epcSub.textContent = `Score: ${epc.score || '–'} · ${epc.type || ''}`;
-      } else {
-        epcWrap.innerHTML = `<div class="epc-badge epc-unknown">–</div>`;
-        epcSub.textContent = 'Configure EPC credentials';
-      }
-
+      document.getElementById('bedrooms-val').textContent = ai.bedrooms || '—';
+      document.getElementById('property-type-sub').textContent = ai.propertyType || '—';
       document.getElementById('sales-count').textContent = sales.length;
 
+      // EPC card
+      const epcWrap = document.getElementById('epc-display');
+      if (epc?.rating) {
+        epcWrap.innerHTML = `<div class="epc-badge epc-${epc.rating}">${epc.rating}</div>`;
+        document.getElementById('epc-sub').textContent = `Score: ${epc.score || '–'} · ${epc.type || ''}`;
+      } else {
+        epcWrap.innerHTML = `<div class="epc-badge epc-unknown">–</div>`;
+        document.getElementById('epc-sub').textContent = 'Not available';
+      }
+
+      // Property details section
+      document.getElementById('det-type').textContent = ai.propertyType || (epc?.type) || '—';
+      document.getElementById('det-bedrooms').textContent = ai.bedrooms ? ai.bedrooms + ' bedrooms' : '—';
+      const sqM = ai.floorAreaSqM || (epc?.floorArea ? parseInt(epc.floorArea) : null);
+      if (sqM) {
+        const sqFt = Math.round(sqM * 10.764);
+        document.getElementById('det-size').textContent = sqM + ' m²';
+        document.getElementById('det-size-sub').textContent = sqFt.toLocaleString() + ' sq ft';
+      } else {
+        document.getElementById('det-size').textContent = '—';
+      }
+      document.getElementById('det-year').textContent = ai.yearBuilt || (epc?.built) || '—';
+      document.getElementById('det-epc').textContent = epc?.rating ? `Band ${epc.rating}` : (ai.epcRating || '—');
+      document.getElementById('det-epc-score').textContent = epc?.score ? `Score: ${epc.score}` : '';
+      document.getElementById('det-council').textContent = ai.councilTaxBand ? `Band ${ai.councilTaxBand}` : '—';
+
+      // Value range bar
+      const lo = ai.valueLow, hi = ai.valueHigh, mid = ai.estimatedValue;
+      const pct = lo < hi ? ((mid - lo) / (hi - lo)) * 100 : 50;
+      document.getElementById('range-fill').style.width = '100%';
+      document.getElementById('range-pointer').style.left = Math.min(Math.max(pct, 0), 100) + '%';
+      document.getElementById('range-low').textContent = fmt(lo);
+      document.getElementById('range-mid').textContent = fmt(mid);
+      document.getElementById('range-high').textContent = fmt(hi);
+
       // Analysis
-      const analysisEl = document.getElementById('analysis-text');
-      analysisEl.innerHTML = (ai.analysis || '').split('\n').filter(Boolean)
-        .map(p => `<p>${p}</p>`).join('');
+      document.getElementById('analysis-text').innerHTML =
+        (ai.analysis || '').split('\n').filter(Boolean).map(p => `<p>${p}</p>`).join('');
 
       // Key factors
-      const factorsList = document.getElementById('key-factors');
-      factorsList.innerHTML = (ai.keyFactors || []).map(f => `<li>${f}</li>`).join('');
+      document.getElementById('key-factors').innerHTML =
+        (ai.keyFactors || []).map(f => `<li>${f}</li>`).join('');
 
       // Sales table
       const tbody = document.getElementById('sales-body');
-      if (sales.length === 0) {
+      if (!sales.length) {
         tbody.innerHTML = `<tr><td colspan="4" class="no-data">No sold price data found for this postcode.</td></tr>`;
       } else {
         tbody.innerHTML = sales.map(s => `
@@ -609,6 +858,7 @@ Based on this data, provide a UK property market valuation. Return ONLY valid JS
 
       document.getElementById('loading').style.display = 'none';
       document.getElementById('report').style.display = 'block';
+      document.getElementById('report').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     } catch (err) {
       showError(err.message || 'Something went wrong. Please try again.');
@@ -617,89 +867,136 @@ Based on this data, provide a UK property market valuation. Return ONLY valid JS
     }
   }
 
-  // ── Enter key support ─────────────────────────────────────
-  document.getElementById('postcode-input').addEventListener('keydown', e => {
+  // ── Enter key support ──────────────────────────────────────
+  document.getElementById('address-input').addEventListener('keydown', e => {
     if (e.key === 'Enter') startValuation();
   });
 
-  // ── PDF Generation ─────────────────────────────────────────
+  // ── PDF Generation ──────────────────────────────────────────
   function downloadPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-    const { pc, sales, epc, ai } = reportData;
+    const { pc, sales, epc, ai, streetAddress } = reportData;
     const margin = 18;
     let y = margin;
 
-    // Header bar
+    // ── Cover header bar ──
     doc.setFillColor(26, 60, 94);
-    doc.rect(0, 0, 210, 28, 'F');
+    doc.rect(0, 0, 210, 32, 'F');
+    doc.setFillColor(232, 160, 32);
+    doc.rect(0, 32, 210, 3, 'F');
+
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(16);
+    doc.setFontSize(15);
     doc.setFont('helvetica', 'bold');
-    doc.text('PropertyVal UK – Valuation Report', margin, 18);
+    doc.text('PropertyVal UK', margin, 14);
     doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
-    doc.text(`Generated: ${new Date().toLocaleDateString('en-GB')}`, 210 - margin, 18, { align: 'right' });
-    y = 38;
+    doc.text('Professional Property Valuation Report', margin, 21);
+    doc.text(`Generated: ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`, 210 - margin, 21, { align: 'right' });
+    y = 45;
 
-    // Postcode & area
+    // ── Address block ──
     doc.setTextColor(30, 42, 56);
-    doc.setFontSize(20);
-    doc.setFont('helvetica', 'bold');
-    doc.text(pc.postcode, margin, y); y += 7;
-    doc.setFontSize(10);
+    if (streetAddress) {
+      doc.setFontSize(18);
+      doc.setFont('helvetica', 'bold');
+      doc.text(streetAddress, margin, y); y += 8;
+      doc.setFontSize(12);
+      doc.setTextColor(36, 82, 127);
+      doc.text(pc.postcode, margin, y); y += 7;
+    } else {
+      doc.setFontSize(20);
+      doc.setFont('helvetica', 'bold');
+      doc.text(pc.postcode, margin, y); y += 8;
+    }
+    doc.setFontSize(9);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(107, 122, 141);
-    doc.text([pc.admin_ward, pc.admin_district, pc.region].filter(Boolean).join(' · '), margin, y); y += 12;
+    doc.text([pc.admin_ward, pc.admin_district, pc.region].filter(Boolean).join(' · '), margin, y);
+    y += 12;
 
-    // Key metrics table
+    // ── Key metrics box ──
     doc.setFillColor(240, 244, 248);
-    doc.roundedRect(margin, y, 174, 24, 3, 3, 'F');
-    doc.setTextColor(30, 42, 56);
-    doc.setFontSize(9);
+    doc.roundedRect(margin, y, 174, 28, 3, 3, 'F');
+    doc.setTextColor(107, 122, 141);
+    doc.setFontSize(7.5);
     doc.setFont('helvetica', 'bold');
     doc.text('ESTIMATED VALUE', margin + 4, y + 7);
     doc.text('RENTAL YIELD', margin + 62, y + 7);
-    doc.text('MONTHLY RENT', margin + 110, y + 7);
-    doc.setFontSize(14);
+    doc.text('MONTHLY RENT', margin + 108, y + 7);
+    doc.text('BEDROOMS', margin + 152, y + 7);
+    doc.setTextColor(26, 60, 94);
+    doc.setFontSize(13);
     doc.text(fmt(ai.estimatedValue), margin + 4, y + 18);
-    doc.setFontSize(14);
-    doc.text(ai.rentalYield.toFixed(1) + '%', margin + 62, y + 18);
-    doc.text(fmt(ai.monthlyRent), margin + 110, y + 18);
-    y += 32;
+    doc.text(Number(ai.rentalYield).toFixed(1) + '%', margin + 62, y + 18);
+    doc.text(fmt(ai.monthlyRent), margin + 108, y + 18);
+    doc.text(String(ai.bedrooms || '—'), margin + 152, y + 18);
+    y += 36;
 
-    // Range
-    doc.setFontSize(9);
+    // Value range line
+    doc.setFontSize(8.5);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(107, 122, 141);
     doc.text(`Value range: ${fmt(ai.valueLow)} – ${fmt(ai.valueHigh)}`, margin, y);
-    if (epc?.rating) doc.text(`EPC Rating: ${epc.rating}  Score: ${epc.score}`, margin + 90, y);
-    y += 12;
+    if (epc?.rating) doc.text(`EPC: ${epc.rating}  Score: ${epc.score}`, margin + 100, y);
+    y += 10;
 
-    // Analysis
+    // ── Property Details table ──
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(26, 60, 94);
-    doc.text('Market Analysis', margin, y); y += 6;
+    doc.text('Property Details', margin, y); y += 4;
     doc.setDrawColor(232, 160, 32);
-    doc.setLineWidth(0.5);
+    doc.setLineWidth(0.6);
+    doc.line(margin, y, 210 - margin, y); y += 3;
+
+    const sqM = ai.floorAreaSqM || (epc?.floorArea ? parseInt(epc.floorArea) : null);
+    const detailRows = [
+      ['Property Type', ai.propertyType || (epc?.type) || '—', 'Year Built', ai.yearBuilt || (epc?.built) || '—'],
+      ['Bedrooms', ai.bedrooms ? ai.bedrooms + ' bedrooms' : '—', 'Floor Area', sqM ? sqM + ' m² (' + Math.round(sqM * 10.764).toLocaleString() + ' sq ft)' : '—'],
+      ['EPC Rating', epc?.rating ? `Band ${epc.rating} (Score: ${epc.score})` : '—', 'Council Tax Band', ai.councilTaxBand ? `Band ${ai.councilTaxBand}` : '—'],
+    ];
+    doc.autoTable({
+      startY: y,
+      margin: { left: margin, right: margin },
+      body: detailRows,
+      styles: { fontSize: 8.5, cellPadding: 3 },
+      columnStyles: {
+        0: { fontStyle: 'bold', textColor: [107, 122, 141], cellWidth: 38 },
+        1: { textColor: [30, 42, 56], cellWidth: 50 },
+        2: { fontStyle: 'bold', textColor: [107, 122, 141], cellWidth: 38 },
+        3: { textColor: [30, 42, 56] },
+      },
+      alternateRowStyles: { fillColor: [248, 250, 252] },
+      theme: 'plain',
+    });
+    y = doc.lastAutoTable.finalY + 8;
+
+    // ── AI Analysis ──
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(26, 60, 94);
+    doc.text('Market Commentary', margin, y); y += 4;
+    doc.setDrawColor(232, 160, 32);
     doc.line(margin, y, 210 - margin, y); y += 5;
-    doc.setFontSize(9);
+    doc.setFontSize(8.8);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(55, 65, 81);
     const analysisLines = doc.splitTextToSize(ai.analysis || '', 174);
     doc.text(analysisLines, margin, y);
     y += analysisLines.length * 4.5 + 8;
 
-    // Key factors
+    // ── Key Factors ──
     if (ai.keyFactors?.length) {
+      if (y > 240) { doc.addPage(); y = margin; }
       doc.setFontSize(11);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(26, 60, 94);
-      doc.text('Key Market Factors', margin, y); y += 5;
+      doc.text('Key Market Factors', margin, y); y += 4;
       doc.setDrawColor(232, 160, 32);
       doc.line(margin, y, 210 - margin, y); y += 5;
-      doc.setFontSize(9);
+      doc.setFontSize(8.8);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(55, 65, 81);
       ai.keyFactors.forEach(f => {
@@ -708,20 +1005,21 @@ Based on this data, provide a UK property market valuation. Return ONLY valid JS
       y += 6;
     }
 
-    // Sales table
+    // ── Comparables table ──
     if (sales.length > 0) {
+      if (y > 220) { doc.addPage(); y = margin; }
       doc.setFontSize(11);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(26, 60, 94);
-      doc.text('Comparable Sales – Land Registry', margin, y); y += 5;
+      doc.text('Comparable Sales – Land Registry', margin, y); y += 4;
       doc.setDrawColor(232, 160, 32);
       doc.line(margin, y, 210 - margin, y); y += 3;
 
       doc.autoTable({
         startY: y,
         margin: { left: margin, right: margin },
-        head: [['Address', 'Price', 'Date', 'Type']],
-        body: sales.slice(0, 15).map(s => [
+        head: [['Address', 'Sale Price', 'Date', 'Type']],
+        body: sales.slice(0, 20).map(s => [
           (s.address || '—') + (s.town ? ', ' + s.town : ''),
           fmt(s.amount),
           s.date,
@@ -730,19 +1028,30 @@ Based on this data, provide a UK property market valuation. Return ONLY valid JS
         styles: { fontSize: 8, cellPadding: 3 },
         headStyles: { fillColor: [26, 60, 94], textColor: 255, fontStyle: 'bold' },
         alternateRowStyles: { fillColor: [248, 250, 252] },
+        columnStyles: { 1: { fontStyle: 'bold', textColor: [26, 60, 94] } },
       });
     }
 
-    // Footer
+    // ── Footer on every page ──
     const pageCount = doc.internal.getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
-      doc.setFontSize(7.5);
+      doc.setFillColor(26, 60, 94);
+      doc.rect(0, 285, 210, 12, 'F');
+      doc.setFontSize(7);
       doc.setTextColor(160, 170, 184);
-      doc.text('This report is for informational purposes only and does not constitute professional property advice.', 105, 290, { align: 'center' });
+      doc.text(
+        'This report is for informational purposes only and does not constitute professional property advice.  |  PropertyVal UK',
+        105, 292, { align: 'center' }
+      );
+      doc.setTextColor(200, 210, 220);
+      doc.text(`Page ${i} of ${pageCount}`, 210 - margin, 292, { align: 'right' });
     }
 
-    doc.save(`PropertyVal-${pc.postcode.replace(/\s/g, '')}-${Date.now()}.pdf`);
+    const filename = streetAddress
+      ? `PropertyVal-${streetAddress.replace(/[^a-z0-9]/gi, '-').slice(0, 30)}-${pc.postcode.replace(/\s/, '')}.pdf`
+      : `PropertyVal-${pc.postcode.replace(/\s/, '')}.pdf`;
+    doc.save(filename);
   }
 </script>
 </body>
