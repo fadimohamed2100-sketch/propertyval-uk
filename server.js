@@ -55,7 +55,7 @@ app.post('/api/valuation', async (req, res) => {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-opus-4-5',
+        model: 'claude-sonnet-4-5',
         max_tokens: 1024,
         messages,
       }),
@@ -64,11 +64,13 @@ app.post('/api/valuation', async (req, res) => {
     const data = await response.json();
 
     if (!response.ok) {
+      console.error('[Anthropic API error]', response.status, JSON.stringify(data, null, 2));
       return res.status(response.status).json({ error: data.error?.message || 'Anthropic API error' });
     }
 
     res.json(data);
   } catch (err) {
+    console.error('[Anthropic fetch error]', err);
     res.status(500).json({ error: 'Failed to contact Anthropic API' });
   }
 });
